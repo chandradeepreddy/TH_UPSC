@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib2
 import re
+from datetime import date, timedelta
 
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
@@ -56,7 +57,23 @@ def Hindu_Article_Extractor(URL):
 	row["DateTime"] = tmstmp
 	return row
 
+def Hindu_DayUrl_Generator():
+	print "Enter Start and End Date details"
+	start_year = int(raw_input("Enter the start date year: "))
+	start_month = int(raw_input("Enter the start date month: "))
+	start_day = int(raw_input("Enter the start date day: "))
+	end_year = int(raw_input("Enter the end date year: "))
+	end_month = int(raw_input("Enter the end date month: "))
+	end_day = int(raw_input("Enter the end date day: "))
 
+	DayUrls =[]
+	Start_Date = date(start_year, start_month, start_day)  # start date
+	End_Date = date(end_year, end_month, end_day)  # end date
+	delta = (End_Date-Start_Date)
+
+	for i in range(delta.days + 1):
+		DayUrls.append('http://www.thehindu.com/archive/print/'+str((Start_Date + timedelta(days=i)).year)+'/'+str((Start_Date + timedelta(days=i)).strftime('%m'))+'/'+str((Start_Date + timedelta(days=i)).strftime('%d'))+'/')
+	return DayUrls
 
 
 
