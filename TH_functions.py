@@ -1,9 +1,12 @@
 from bs4 import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 import urllib2
 import re
 from datetime import date, timedelta
-
 import warnings
+import collections
+
+
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
 
 def TH_Article_Content_Extractor(ArtURL):
@@ -15,7 +18,8 @@ def TH_Article_Content_Extractor(ArtURL):
 	Body
 	Image URL
 	Author
-	Date time
+	Date time.
+	returns a dictionary
 	"""
 	try:
 		title =BeautifulSoup(urllib2.urlopen(ArtURL)).find_all("h1",{"class":re.compile("title")})[0].text.strip().encode('utf-8')
@@ -58,6 +62,12 @@ def TH_Article_Content_Extractor(ArtURL):
 	return row
 
 def TH_DayUrl_Generator():
+	""" 
+	This function takes in a date range and 
+	give a list of hindu daily urls from 
+	the hindu archives page ( print edition).
+	returns a list
+	"""
 	print "Enter Start and End Date details"
 	start_year = int(raw_input("Enter the start date year: "))
 	start_month = int(raw_input("Enter the start date month: "))
@@ -76,6 +86,25 @@ def TH_DayUrl_Generator():
 	return DayUrls
 
 
+
+def TH_Article_URL__Extractor(DayUrls_list):
+	""" 
+	This function takes in a daily hindu url list
+	and gives all artilce links from that day along with 
+	the date. returns a list
+	"""
+	ArtUrls = {}
+	for i in range(len(DayUrls_list)):
+		soup = BeautifulSoup(urllib2.urlopen(DayUrls_list[i]))
+		soup.prettify()
+		AllUrls = soup.findAll('a', href=True)
+		Articles = [AllUrls[url]['href'] for url in range(len(AllUrls)) if '.ece' in AllUrls[url]['href'] and '/todays-paper/' in AllUrls[url]['href'] ]
+		
+		for j in range(len(Articles)):
+			print str(re.sub('[^0-9]','',DayUrls_list[i])) +' '+Articles[j]
+			ArtUrls[Articles[j].encode('utf-8')] = str(re.sub('[^0-9]','',DayUrls_list[i]))
+	
+	return ArtUrls
 
 
 ####Comments
