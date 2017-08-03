@@ -5,7 +5,7 @@ import re
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning, module='bs4')
 
-def Hindu_URL_Extractor(URL):
+def Hindu_Article_Extractor(URL):
 	""" 
 	This function takes in a hindu article url and 
 	returns a dictionary with following details:
